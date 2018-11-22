@@ -29,6 +29,8 @@ RUN apt-get update \
         curl \
         wget \
         tcptraceroute \
+        libfreetype6-dev \
+        libmcrypt-dev \
     && chmod 755 /bin/init_container.sh \
     && echo "root:Docker!" | chpasswd \
     && echo "cd /home" >> /etc/bash.bashrc \
@@ -41,7 +43,8 @@ RUN apt-get update \
     && pecl install sqlsrv pdo_sqlsrv \
     && echo extension=pdo_sqlsrv.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/30-pdo_sqlsrv.ini \
     && echo extension=sqlsrv.so >> `php --ini | grep "Scan for additional .ini files" | sed -e "s|.*:\s*||"`/20-sqlsrv.ini \
-    && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
+    && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr --enable-gd-native-ttf \
+        --with-freetype-dir=/usr/include/freetype2\
     && docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
     && docker-php-ext-configure pdo_odbc --with-pdo-odbc=unixODBC,/usr \
     && docker-php-ext-install gd \
